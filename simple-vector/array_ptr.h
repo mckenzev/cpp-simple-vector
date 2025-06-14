@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include <utility>
 
 template <typename Type>

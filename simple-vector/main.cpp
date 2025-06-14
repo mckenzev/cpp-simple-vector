@@ -2,7 +2,6 @@
 #include <iostream>
 #include <numeric>
 #include <vector>
-#include <stdexcept>
 #include <exception>
 
 #include "simple_vector.h"
@@ -562,7 +561,8 @@ void TestMoveableThrowableInsertWithoutRealloc() {
     1 2 -1 3 4 5 6 7 8 9 10
     Assertion failed: sv.GetSize() == v.size(), file main.cpp, line 527
 
-    Видимо стандартный вектор изменяет размер до выявления исключения, а SimpleVactor только после всех операций, которые могут выбросить исключение
+    Видимо стандартный вектор изменяет размер до выявления исключения, а SimpleVector только после всех операций, которые могут выбросить исключение
+    Точно не знаю, стоит ли в SimpleVector менять size заранее.
     */
 }
 
@@ -578,14 +578,6 @@ void TestMoveableThrowableInsertWithRealloc() {
     try {
         v.insert(v.begin() + 2, MoveableThrowable(11, true));
     } catch (...) {}
-
-    // simple vec
-    for (auto& a : sv) cout << a.num << ' ';
-    cout << endl;
-
-    // std::vec
-    for (auto& a : v) cout << a.num << ' ';
-    cout << endl;
 
     assert(sv.GetSize() == v.size());
     assert(sv.GetCapacity() == v.capacity());

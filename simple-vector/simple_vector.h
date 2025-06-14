@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <cassert>
 #include <initializer_list>
 #include <type_traits>
 #include <stdexcept>
