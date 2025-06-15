@@ -33,38 +33,22 @@ public:
     explicit SimpleVector(size_t size) : SimpleVector(size, Type()) {}
 
     // Создаёт вектор из size элементов, инициализированных значением value
-    SimpleVector(size_t size, const Type& value) {
-        if (size == 0) {
-            return;
+    SimpleVector(size_t size, const Type& value)
+        : ptr_(size), size_(size), capacity_(size) {
+        if (size > 0) {
+            std::fill_n(ptr_.Get(), size, value);
         }
-
-        ArrayPtr<Type> array(size);
-        
-        std::fill_n(array.Get(), size, value);
-
-        ptr_.swap(array);
-        size_ = capacity_ = size;
     }
 
     // Создаёт вектор из std::initializer_list
-    SimpleVector(std::initializer_list<Type> init) {
-        ArrayPtr<Type> array(init.size());
-        
-        // Название метода не подходящее, но он идеально подходит и для копирования/перемещения из initializer_list
-        DataOverwrite(init.begin(), init.end(), array.Get());
-
-        ptr_.swap(array);
-        size_ = capacity_ = init.size();
+    SimpleVector(std::initializer_list<Type> init)
+        : ptr_(init.size()), size_(init.size()), capacity_(init.size()) {
+        DataOverwrite(init.begin(), init.end(), ptr_.Get());
     }
 
-    SimpleVector(const SimpleVector& other) {
-        ArrayPtr<Type> array(other.capacity_);
-        
-        std::copy(other.begin(), other.end(), array.Get());
-        
-        ptr_.swap(array);
-        size_ = other.size_;
-        capacity_ = other.capacity_;
+    SimpleVector(const SimpleVector& other) 
+        : ptr_(other.size_), size_(other.size_), capacity_(other.size_) {
+        std::copy(other.begin(), other.end(), ptr_.Get());
     }
 
     SimpleVector(SimpleVector&& other) : ptr_(std::exchange(other.ptr_, ArrayPtr<Type>(nullptr))),
